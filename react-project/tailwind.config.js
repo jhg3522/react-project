@@ -5,7 +5,12 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      textColor: ['hover','focus'],
+      backgroundColor: ['hover'],
+      ringColor : ['hover', 'focus'],
+    },
+
   },
   plugins: [
     require('@tailwindcss/line-clamp'),

@@ -1,12 +1,15 @@
-
 import './App.css';
-
+import MainPage from './pages/MainPage';
+import SubPage from './pages/SubPage';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 function App() {
   return (
-    <div className="App" class="p-6 items-center justify-center">
-        <h1 class="text-blue-400 font-extrabold">Hello World!</h1>
-        <p class="tracking-widest">This is my first React App.</p>
-    </div>
+    <BrowserRouter>
+      <Switch>
+	      <Route exact path='/a/:id' component={SubPage} />
+        <Route exact path='/' component={MainPage} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 

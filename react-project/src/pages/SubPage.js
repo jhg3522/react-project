@@ -1,10 +1,12 @@
 import React from 'react';
-
+import Content from '../components/SubPage/Content'
 function SubPage(){
     return(
-        <div>
-
-        </div>
+        <section className="mx-auto container p-10" style={{width:"1000px"}}>
+            <main>
+                <Content/>
+            </main>  
+      </section>
     );
 }
 

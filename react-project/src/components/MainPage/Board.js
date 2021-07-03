@@ -1,67 +1,47 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import { withRouter,Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import MainButton from './MainButton';
+import Post from './Post';
 
-function Post({post}){
-    return(
-        <>
-            <h3 className="text-lg">
-                <span className="text-blue-500 font-medium">{post.id}. </span>
-                {post.title}
-            </h3>
-            <p className="line-clamp-3">{post.content}</p>
-        </>
-    );
-}
+const url = `https://recruit-api.yonple.com/recruit/294810/a-posts`;
 
 function Board(){
-    const [posts, setPosts] = useState([])
-    const [page, setPage] = useState(0)
-    const url = `https://recruit-api.yonple.com/recruit/294810/a-posts`;
-    const infiniteScroll = useCallback(async () => {
-        const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-        const scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
-        const clientHeight = document.documentElement.clientHeight;
-
-        if(scrollTop + clientHeight === scrollHeight) {
-            setPage(page + 10);
-            await axios.get(`${url}?page=${page}`).then((res) => {
-                setPosts([...posts, ...res.data])
-                console.log(res.data)
-          })
-        }
-    }, [page,posts])
-
+    const [posts, setPosts] = useState([]);
     useEffect(() => {
-        axios.get(`${url}?page=${page}`).then((res) => {
-            setPosts([...posts, ...res.data])
-            console.log(res.data)
-         })
-    }, []);
-
-    useEffect(() => {
-        window.addEventListener('scroll', infiniteScroll, true);
-        return () => window.removeEventListener('scroll', infiniteScroll, true);
-      }, [infiniteScroll]);
+        axios.get(`${url}?page=0`)
+        .then((res) => {
+            setPosts(res.data);
+            console.log(posts)
+        })
+    },[])
 
     return(
-        <article>
-            <section>
-                <header className="border-b mb-2">
-                    <button className="p-3 rounded outline-none appearance-none font-medium">A Posts</button>
-                    <button className="p-3 rounded outline-none appearance-none font-medium">B Posts</button>
-                </header>
-            </section>
-            <ul className="flex flex-col border rounded-md p-5">
-                {posts.map((post) => 
-                <a className="">
-                    <li className="p-5" key={post.title}>
-                        <Post post={post}/>
-                    </li>
-                </a>
-                )}
-            </ul>
-        </article>
+        <>
+            <article className="flex mx-auto w-96 p-4 border rounded focus:ring focus:ring-blue-500 hover:ring-blue">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-5 text-gray-400 text-bold mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
+                <input className="outline-none" placeholder="검색어를 입력하세요"/>
+            </article>
+            <article>
+                <section>
+                    <header className="border-b mb-2">
+                        <MainButton name={"A Posts"}/>
+                    </header>
+                </section>
+                <ul className="flex flex-col border rounded-md p-5">
+                    {posts.map((post) => 
+                    <Link to={`/a/${post.id}`}  key={post.id} className="hover:bg-gray-100">
+                        <li className="p-5">
+                            <Post post={post}/>
+                        </li>
+                    </Link>
+                    )}
+                </ul>
+            </article>
+        </>
     )
 }
 
-export default Board;
+export default withRouter(Board);
