@@ -16,18 +16,27 @@ function Board(){
     const [ref, inView] = useInView()
 
     const getPosts = useCallback(async() => {
-        await axios.get(`${url}?page=${pageNumber}&search=${search}`)
+        axios.get(`${url}?page=${pageNumber}&search=${search}`)
         .then((res) => {
-            setPosts((prev) => [...prev, ...res.data])
+            setPosts(res.data)
             console.log(res.data)
         })
     },[search,pageNumber])
 
+    const getNewPosts = useCallback(async () => {
+        axios.get(`${url}?page=${pageNumber}&search=${search}`)
+        .then((res) => {
+            setPosts(prevState => [...prevState, res.data])
+        })
+    },[pageNumber])
+
     useEffect(() => {
-        if (inView && pageNumber != 9) {
-            setTimeout(() => {
-                setPageNumber(pageNumber + 1);
-              }, 100);
+        getNewPosts()
+      }, [getNewPosts])
+
+    useEffect(() => {
+        if (inView) {
+            setPageNumber(prevState => prevState + 1)
         }
     }, [inView])
 
@@ -40,7 +49,7 @@ function Board(){
     useEffect(() => {
         getPosts()
     }, [getPosts])
-    console.log(pageNumber)
+
     return(
         <>
             <article className="mx-auto w-96">
@@ -58,22 +67,23 @@ function Board(){
                     </header>
                 </section>
                 <ul className="flex flex-col border rounded-md p-5">
-                    {posts.length &&
-                        posts.map((post, idx) =>
-                            idx !== posts.length - 1 ? (
-                            <Link to={`/a/${post.id}`} key={idx} className="hover:bg-gray-100">
-                                <li className="p-5">
-                                    <Post post={post} />
-                                </li>
-                            </Link>
-                            ) : (
-                            <Link ref={ref} to={`/a/${post.id}`} key={idx} className="hover:bg-gray-100">
-                                <li className="p-5">
-                                    <Post post={post} />
-                                </li>
-                            </Link>
-                            )
-                        )}
+                    {posts.map((post,idx) => {
+                        {posts.length -1 == idx 
+                        ?
+                        <Link ref={ref} to={`/a/${post.id}`} key={idx} className="hover:bg-gray-100">
+                            <li className="p-5">
+                                <Post post={post}/>
+                            </li>
+                        </Link>
+                        :
+                        <Link to={`/a/${post.id}`} key={idx} className="hover:bg-gray-100">
+                            <li className="p-5">
+                                <Post post={post}/>
+                            </li>
+                        </Link>
+                        }
+                    }
+                    )}
                 </ul>
             </article>
         </>

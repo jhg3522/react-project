@@ -1,11 +1,6 @@
 import Board from "../components/MainPage/Board";
-import { useState } from "react";
 
 function MainPage() {
-  const [query, setQuery] = useState('')
-  const [pageNumber, setPageNumber] = useState(1)
-  Board(query, pageNumber)
-  
   return (
     <section className="mx-auto container p-10" style={{width:"1000px"}}>
       <header>
