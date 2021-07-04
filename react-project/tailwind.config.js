@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       textColor: ['hover','focus'],
       backgroundColor: ['hover'],
-      ringColor : ['hover', 'focus']
+      ringColor : ['hover', 'focus'],
     },
 
   },

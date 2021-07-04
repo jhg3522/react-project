@@ -7,8 +7,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import MainButton from './MainButton';
 import Post from './Post';
 
-const url = `https://recruit-api.yonple.com/recruit/294810/a-posts`;
-
+const url = `https://recruit-api.yonple.com/recruit/${process.env.REACT_APP_TOKEN}/a-posts`;
 function Board(){
     const [posts, setPosts] = useState([]);
     const [search, setSearch] = useState('');
@@ -19,7 +18,6 @@ function Board(){
         await axios.get(`${url}?page=${pageNumber}&search=${search}`)
         .then((res) => {
             setPosts((prev) => [...prev, ...res.data])
-            console.log(res.data)
         })
     },[search,pageNumber])
 
@@ -40,14 +38,14 @@ function Board(){
     useEffect(() => {
         getPosts()
     }, [getPosts])
-    console.log(pageNumber)
+
     return(
         <>
             <article className="mx-auto w-96">
-                <form className="flex w-full rounded md:ml-0 h-12  hover:ring-1">
-                    <figure className="relative w-full border rounded flex">
+                <form className="flex w-full  md:ml-0 h-12 ">
+                    <figure className="relative hover:border-blue-500 w-full border flex">
                         <i className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400"><FontAwesomeIcon icon={faSearch} className="search" /></i>
-                        <input className="block w-full h-full pl-8 outline-none focus:ring-1 focus:border-transparent focus:ring-blue-400" type="text" onChange={handleSearch}  placeholder="검색어를 입력하세요"/>
+                        <input className="block w-full h-full pl-8 outline-none focus:ring-1 focus:border-transparent focus:ring-blue-500" type="text" onChange={handleSearch}  placeholder="검색어를 입력하세요"/>
                     </figure>
                 </form>
             </article>
@@ -58,16 +56,15 @@ function Board(){
                     </header>
                 </section>
                 <ul className="flex flex-col border rounded-md p-5">
-                    {posts.length &&
-                        posts.map((post, idx) =>
+                    {posts.map((post, idx) =>
                             idx !== posts.length - 1 ? (
-                            <Link to={`/a/${post.id}`} key={idx} className="hover:bg-gray-100">
+                            <Link to={`/a/${post.id}`} key={idx} className="transition-colors duration-150 ease-in-out hover:bg-gray-100">
                                 <li className="p-5">
                                     <Post post={post} />
                                 </li>
                             </Link>
                             ) : (
-                            <Link ref={ref} to={`/a/${post.id}`} key={idx} className="hover:bg-gray-100">
+                            <Link ref={ref} to={`/a/${post.id}`} key={idx} className="transition-colors duration-150 ease-in-out hover:bg-gray-100">
                                 <li className="p-5">
                                     <Post post={post} />
                                 </li>
